@@ -1,0 +1,8 @@
+<%- include('header') -%>
+<main>
+    <h2><%= contact.civilite %> <%= contact.lastName %> <%= contact.firstName %></h2>
+    <p><strong>Numéro de téléphone: </strong><%= contact.phone %></p>
+    <p><strong>Adresse Email </strong><%= contact.email %></p>
+    <a href="/contacts/<%= contact.id %>/update">Modifier le contact</a>
+</main>
+<%- include('footer') -%>

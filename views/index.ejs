@@ -1,0 +1,19 @@
+<%- include('header') -%>
+<main>
+    <h2>Liste des contacts</h2>
+    <form action="/contacts/delete" method="post">
+        <ul>
+            <% for(let i = 0; i<contacts.length; i++) { %>
+                <li>
+                    <input type="checkbox" name="contactsToDelete[]" value="<%= contacts[i].id %>">
+                    <span class="contact"><%= contacts[i].firstName.toUpperCase() %> <%= contacts[i].lastName %> </span>
+                    <a href="/contacts/<%= contacts[i].id %>">
+                        <i class="far fa-eye"></i>
+                    </a>
+                </li>
+            <% } %>
+        </ul>
+        <button>Supprimer</button>
+    </form>
+</main>
+<%- include('footer') -%>
