@@ -1,11 +1,13 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import mysql from 'mysql';
 
 // Création du pool de connexion
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'root',
-    database: 'bdcontacts'
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PWD,
+    database: process.env.DB_NAME,
 });
 
 /**

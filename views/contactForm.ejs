@@ -1,7 +1,7 @@
 <%- include('header') -%>
 <main>
     <h2><%= title %></h2>
-    <form action='<%= action %>' method="post">
+    <form action='<%= action %>' method="post" enctype="multipart/form-data">
         <p>
             <label for="civilite">Civilité</label>
             <select name='civilite' id="civilite">
@@ -10,12 +10,16 @@
             </select>
         </p>
         <p>
+            <label for="photo">Photo</label>
+            <input type="file" name="image" id="photo" value="<%= locals.contact ? contact.image : '' %>">     
+        </p>
+        <p>
             <label for="lastName">Nom</label>
             <input type="text" name="lastName" id="lastName" value="<%= locals.contact ? contact.lastName : '' %>">     
         </p>
         <p>
-            <label for="firstName">Prénom</label>
-            <input type="text" name="firstName" id="firstName" value="<%= locals.contact ? contact.firstName : '' %>">   
+            <label for="surname">Prénom</label>
+            <input type="text" name="surname" id="surname" value="<%= locals.contact ? contact.surname : '' %>">   
         </p>
         <p>
             <label for="phone">Téléphone</label>
@@ -32,3 +36,4 @@
     </form>
 </main>
 <%- include('footer') -%>
+

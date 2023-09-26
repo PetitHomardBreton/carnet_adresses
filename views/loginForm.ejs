@@ -1,0 +1,21 @@
+<%- include('header') -%>
+<main>
+  <h1>Connexion au compte</h1>
+  <form method="post">
+    <% if (locals.message) { %>
+      <p><%= message %></p>
+    <% } %>
+    <p>
+      <label for="pseudo">Pseudo :</label>
+      <input type="text" name="pseudo" required /><br />
+    </p>
+    <p>
+      <label for="password">Mot de passe :</label>
+      <input type="password" name="password" required /><br />
+    </p>
+    <p>
+      <button type="submit">Connexion</button>
+    </p>
+  </form>
+</main>
+<%- include('footer') -%>

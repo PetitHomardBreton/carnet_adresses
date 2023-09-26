@@ -1,0 +1,27 @@
+<%- include('header') -%>
+<main>
+  <h2>Ajouter un nouvel utilisateur</h2>
+  <p>
+    Vous pouvez ajouter un nouvel utilisateur en remplissant le formulaire
+    ci-dessous.
+  </p>
+  <form action="/user" method="post">
+    <p>
+      <label for="pseudo">Nouveau pseudo :</label>
+      <input type="text" id="pseudo" name="pseudo" required />
+    </p>
+    <p>
+      <label for="password">Nouveau mot de passe :</label>
+      <input type="password" id="password" name="password" required />
+    </p>
+    <p>
+      <label for="role">Role :</label>
+      <select id="role" name="role">
+        <option value="user">Utilisateur</option>
+        <option value="admin">Administrateur</option>
+      </select>
+    </p>
+    <button type="submit">Ajouter</button>
+  </form>
+</main>
+<%- include('footer') -%>

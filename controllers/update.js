@@ -1,57 +1,113 @@
-import query from "../database.js";
+import dotenv from 'dotenv';
+dotenv.config();
+
+import query from '../database.js';
+import formidable from 'formidable';
+import fs from 'fs';
 
 /***AFFICHER LE FORMULAIRE DE MODIFICATION */
 export function updateContact(req, res) {
-  const contactId = req.params.id;
+    let id = req.params.id;
 
-  query("SELECT * FROM contacts WHERE id = ?", [contactId], (err, result) => {
-    //si il y a une erreur on l'affiche
-    if (err) {
-      console.log(err);
-      return res.status(500).send("Une erreur s'est produite");
-    }
-    //si le contact n'existe pas on affiche une erreur
-    if (result.length === 0) {
-      return res
-        .status(404)
-        .send(`Le contact avec l'id ${contactId} n'existe pas`);
-    }
-    //on appelle le template contactForm en lui passant les informations concernant le contact
-    res.render("contactForm", {
-      title: "Modification d'un contact",
-      action: `/contacts/${contactId}/update`, // Utilisez "contactId" au lieu de "id"
-      id: contactId, // Utilisez "contactId" au lieu de "id"
-      contact: result[0], // Récupérez le premier élément du résultat
-    });
-  });
-}
+    query(
+        'SELECT * FROM Contacts WHERE id = ?', [id],
+        (error, results) => {
+            if (error) {
+                console.error(error);
+                res.status(500).send('Erreur lors de la requete');
+                return;
+            }
+
+            const contact = results[0];
+
+            if (!contact) {
+                return res.status(404).send(`Contact with id ${id} not found`);
+            }
+
+            //on appelle le template contactForm en lui passant les informations concernant le contact
+            res.render('contactForm', {
+                title: 'Modification d\'un contact',
+                action: `/contacts/${id}/update`,
+                contact
+            });
+        }
+    );
+};
 
 export function updateContactSubmit(req, res) {
-  const contactId = req.params.id;
+    let id = req.params.id;
+    const formData = formidable({
+        allowEmptyFiles: true,
+        minFileSize: 0
+    });
 
-  // Récupérez les données du formulaire
-  const {
-    civilite,
-    firstName,
-    lastName,
-    phone,
-    email
-  } = req.body;
+    const updateContactIntoDb = (data) =>
+        query(`UPDATE Contacts SET civilite = ?,
+                               lastName = ?,
+                               surname = ?,
+                               phone = ?,
+                               email = ?,
+                               image = ?
+            WHERE id = ?`, data,
+            (error, result) => {
+                if (error) {
+                    console.error(error);
+                    res.status(500).send('Erreur lors de la requete');
+                    return;
+                }
+                //on redirige vers la page d'accueil
+                res.redirect('/');
+            }
+        );
 
-  // Mettez à jour le contact dans la base de données SQL
-  query(
-    `UPDATE contacts SET civilite = ?, firstName = ?, lastName = ?, phone = ?, email = ? WHERE id = ?`,
-    [civilite, firstName, lastName, phone, email, contactId], // Utilisez les données du formulaire
-    (error, results) => {
-      if (error) {
-        console.error(`Erreur lors de l'exécution de la requête ${error}`);
-        res.status(500).send('Erreur serveur');
-        return;
-      }
+    // Récupération des champs et des fichiers
+    formData.parse(req, (error, fields, files) => {
+        if (error) {
+            console.error(`Erreur lors de la récupération de la photo ${error}`);
+            res.status(500).send('Erreur serveur');
+            return;
+        }
+        
+        // On change le fichier uniquement s'il y en a un de spécifié
+        // dans le formulaire de modification
+        if (files.image[0].originalFilename === '') {
+            updateContactIntoDb([
+                fields.civilite,
+                fields.lastName,
+                fields.surname,
+                fields.phone,
+                fields.email,
+                '',
+                id
+            ]);
+            return;
+        }
+        
+        // Récupération du chemin temporaire du fichier
+        let oldPath = files.image[0].filepath;
+        // Chemin vers où sera stocké le fichier
+        let newPath = 'public/images/' + files.image[0].originalFilename;
+        // R2cupération du nom du fichier pour le stocker en BDD
+        let imageName = files.image[0].originalFilename;
 
-      // Redirigez vers la page de détails du contact mis à jour
-      res.redirect(`/contacts/${contactId}`);
-    }
-  );
-}
+        // Copie le fichier depuis le dossier temporaire vers le dossier de destination
+        fs.copyFile(oldPath, newPath, (error) => {
+            if (error) {
+                console.error(`Erreur lors de la récupération de la photo`);
+                res.status(500).send('Erreur serveur');
+                return;
+            }
+            updateContactIntoDb([
+                fields.civilite,
+                fields.lastName,
+                fields.surname,
+                fields.phone,
+                fields.email,
+                imageName,
+                id
+            ]);
+        });
+    });
+};
+
 

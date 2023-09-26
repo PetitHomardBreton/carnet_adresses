@@ -1,8 +1,10 @@
 <%- include('header') -%>
 <main>
-    <h2><%= contact.civilite %> <%= contact.lastName %> <%= contact.firstName %></h2>
+    <h2><%= contact.civilite %> <%= contact.lastName %> <%= contact.surname %></h2>
+    <img width="100" src="/images/<%= contact.image %>" alt="Photo du contact" />
     <p><strong>Numéro de téléphone: </strong><%= contact.phone %></p>
     <p><strong>Adresse Email </strong><%= contact.email %></p>
     <a href="/contacts/<%= contact.id %>/update">Modifier le contact</a>
 </main>
 <%- include('footer') -%>
+
