@@ -34,5 +34,5 @@ app.use('/', router);
 
 // connexion du serveur au réseau
 app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
+    console.log(`Server listening on port ${PORT} http://localhost:${PORT}`);
 });

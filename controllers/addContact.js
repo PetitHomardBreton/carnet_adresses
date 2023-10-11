@@ -1,6 +1,7 @@
 import { v4 } from 'uuid';
 import query from '../database.js';
 import formidable from 'formidable';
+import fs from 'fs';
 
 //AFFICHAGE DU FORMULAIRE
 export function addContact(req, res) {

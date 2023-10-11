@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
 
-bcrypt.hash('@!qpB58cQG', 10, (error, hash) => {
+bcrypt.hash('TOTO', 10, (error, hash) => {
     console.log(hash);
 });
